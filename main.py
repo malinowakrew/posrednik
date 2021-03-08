@@ -37,12 +37,29 @@ layout = [[sg.Text('PODAŻ:', size=(25, 1), key='-text1-', font='Helvetica 16'),
           [sg.Button('Ok', enable_events=True, key='-Button-', font='Helvetica 16')],
         [sg.Text('POPYT', size=(25, 1), key='-text3-', font='Helvetica 16'),
         sg.Text('POPYT', size=(25, 1), key='-text4-', font='Helvetica 16')],
-        [sg.Text('SUMA: ', size=(25, 1), key='-text5-', font='Helvetica 16'),
-         sg.Button('SHOW', enable_events=True, key='-Button2-', font='Helvetica 16')]
+        [sg.Text('SUMA: ', size=(25, 1), key='-text5-', font='Helvetica 16', background_color="#709053"),
+         sg.Button('SHOW', enable_events=True, key='-Button2-', font='Helvetica 16', button_color="blue")]
           ]
 
 # Create the window
-sg.theme('Brown')
+# Add your new theme colors and settings
+my_new_theme = {'BACKGROUND': '#709053',
+                'TEXT': '#fff4c9',
+                'INPUT': '#c7e78b',
+                'TEXT_INPUT': '#000000',
+                'SCROLL': '#c7e78b',
+                'BUTTON': ('white', '#709053'),
+                'PROGRESS': ('#01826B', '#D0D0D0'),
+                'BORDER': 1,
+                'SLIDER_DEPTH': 0,
+                'PROGRESS_DEPTH': 0}
+
+# Add your dictionary to the PySimpleGUI themes
+sg.theme_add_new('MyNewTheme', my_new_theme)
+
+# Switch your theme to use the newly added one. You can add spaces to make it more readable
+sg.theme('My New Theme')
+
 window = sg.Window('Zagadnienie pośrednika', layout) #size=(350, 300)
 
 # Event loop
