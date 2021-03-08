@@ -42,6 +42,7 @@ layout = [[sg.Text('PODAŻ:', size=(25, 1), key='-text1-', font='Helvetica 16'),
           ]
 
 # Create the window
+sg.theme('Brown')
 window = sg.Window('Zagadnienie pośrednika', layout) #size=(350, 300)
 
 # Event loop
