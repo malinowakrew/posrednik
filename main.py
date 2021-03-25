@@ -1,4 +1,4 @@
-from ad import *
+#from ad import *
 
 import PySimpleGUI as sg
 import numpy as np
@@ -49,6 +49,12 @@ def suma():
 def str_to_float(values):
     return {k: float(v) for k, v in values.items()}
 
+def matrixs(tab):
+    size1 = 2
+    size2 = 2
+    arr = np.array(tab).reshape(size1, size2)
+    return arr
+
 
 # Define the window's contents i.e. layout
 layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
@@ -90,7 +96,12 @@ while True:
         update(values["-popyt-"], values["-podaz-"])
     if event == "-Button2-":
         values = str_to_float(values)
-        sumik = sum(values.values())
+        matrix_selling_cost = (matrixs([values["-cenasprzedazy1-"], values["-cenasprzedazy2-"], values["-cenasprzedazy1-"],values["-cenasprzedazy2-"]]))
+        matrix_cost_buy = (matrixs([values["-kosztzakupu1-"], values["-kosztzakupu1-"], values["-kosztzakupu2-"],values["-kosztzakupu2-"]]))
+        matrix_cost_trans = (matrixs([values["-kosztytransportu1-"], values["-kosztytransportu2-"], values["-kosztytransportu3-"],values["-kosztytransportu4-"]]))
+        matrix_profits=matrix_selling_cost-matrix_cost_buy-matrix_cost_trans
+        print(matrix_profits)
 
 # Close the window i.e. release resource
 window.close()
+
