@@ -2,6 +2,7 @@
 
 import PySimpleGUI as sg
 import numpy as np
+import pandas as pd
 
 # Add your new theme colors and settings
 my_new_theme = {'BACKGROUND': '#709053',
@@ -47,13 +48,20 @@ def suma():
 
 
 def str_to_float(values):
-    return {k: float(v) for k, v in values.items()}
+    return {k: float(v) for k, v in values.items() if k not in ["-profitmatrix-", "-finalmatrix-"]}
 
 def matrixs(tab):
     size1 = 2
     size2 = 2
     arr = np.array(tab).reshape(size1, size2)
     return arr
+
+
+basic_matrix = np.zeros((3, 3))
+basic_table = pd.DataFrame(data=basic_matrix, columns=["O1", "O2", "OF"])
+basic_table["D/O"] = ["D1", "D2", "DF"]
+basic_table = basic_table[["D/O", "O1", "O2", "OF"]]
+basic_list = basic_table.values.tolist()
 
 
 # Define the window's contents i.e. layout
@@ -79,7 +87,19 @@ layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
            sg.In("9", size=(25, 25), enable_events=True, key="-kosztytransportu4-")],
 
           [sg.Button('Ok', enable_events=True, key='-Button-', font='Helvetica 16')],
-        [sg.Button('KONWERTER', enable_events=True, key='-Button2-', font='Helvetica 16')]
+        [sg.Button('KONWERTER', enable_events=True, key='-Button2-', font='Helvetica 16')],
+
+          [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
+                  display_row_numbers=False,
+                  hide_vertical_scroll=True,
+                  auto_size_columns=False,
+                    num_rows=3, key='-profitmatrix-')],
+
+          [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
+                    display_row_numbers=False,
+                    hide_vertical_scroll=True,
+                    auto_size_columns=False,
+                    num_rows=3, key='-finalmatrix-')]
           ]
 
 # Create the window
@@ -95,12 +115,16 @@ while True:
     if event == '-Button-':
         update(values["-popyt-"], values["-podaz-"])
     if event == "-Button2-":
-        values = str_to_float(values)
-        matrix_selling_cost = (matrixs([values["-cenasprzedazy1-"], values["-cenasprzedazy2-"], values["-cenasprzedazy1-"],values["-cenasprzedazy2-"]]))
-        matrix_cost_buy = (matrixs([values["-kosztzakupu1-"], values["-kosztzakupu1-"], values["-kosztzakupu2-"],values["-kosztzakupu2-"]]))
-        matrix_cost_trans = (matrixs([values["-kosztytransportu1-"], values["-kosztytransportu2-"], values["-kosztytransportu3-"],values["-kosztytransportu4-"]]))
-        matrix_profits=matrix_selling_cost-matrix_cost_buy-matrix_cost_trans
+        print(values)
+        valuesint = str_to_float(values)
+        matrix_selling_cost = (matrixs([valuesint["-cenasprzedazy1-"], valuesint["-cenasprzedazy2-"], valuesint["-cenasprzedazy1-"],valuesint["-cenasprzedazy2-"]]))
+        matrix_cost_buy = (matrixs([valuesint["-kosztzakupu1-"], valuesint["-kosztzakupu1-"], valuesint["-kosztzakupu2-"],valuesint["-kosztzakupu2-"]]))
+        matrix_cost_trans = (matrixs([valuesint["-kosztytransportu1-"], valuesint["-kosztytransportu2-"], valuesint["-kosztytransportu3-"],valuesint["-kosztytransportu4-"]]))
+        matrix_profits = matrix_selling_cost-matrix_cost_buy-matrix_cost_trans
         print(matrix_profits)
+        matrix_zeros = basic_table.to_numpy()
+        matrix_zeros[:-1, 1:-1] = matrix_profits
+        window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
 
 # Close the window i.e. release resource
 window.close()
