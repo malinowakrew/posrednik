@@ -116,15 +116,25 @@ while True:
         update(values["-popyt-"], values["-podaz-"])
     if event == "-Button2-":
         print(values)
-        valuesint = str_to_float(values)
-        matrix_selling_cost = (matrixs([valuesint["-cenasprzedazy1-"], valuesint["-cenasprzedazy2-"], valuesint["-cenasprzedazy1-"],valuesint["-cenasprzedazy2-"]]))
-        matrix_cost_buy = (matrixs([valuesint["-kosztzakupu1-"], valuesint["-kosztzakupu1-"], valuesint["-kosztzakupu2-"],valuesint["-kosztzakupu2-"]]))
-        matrix_cost_trans = (matrixs([valuesint["-kosztytransportu1-"], valuesint["-kosztytransportu2-"], valuesint["-kosztytransportu3-"],valuesint["-kosztytransportu4-"]]))
-        matrix_profits = matrix_selling_cost-matrix_cost_buy-matrix_cost_trans
-        print(matrix_profits)
-        matrix_zeros = basic_table.to_numpy()
-        matrix_zeros[:-1, 1:-1] = matrix_profits
-        window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
+        try:
+            valuesint = str_to_float(values)
+            matrix_selling_cost = (matrixs(
+                [valuesint["-cenasprzedazy1-"], valuesint["-cenasprzedazy2-"], valuesint["-cenasprzedazy1-"],
+                 valuesint["-cenasprzedazy2-"]]))
+            matrix_cost_buy = (matrixs(
+                [valuesint["-kosztzakupu1-"], valuesint["-kosztzakupu1-"], valuesint["-kosztzakupu2-"],
+                 valuesint["-kosztzakupu2-"]]))
+            matrix_cost_trans = (matrixs(
+                [valuesint["-kosztytransportu1-"], valuesint["-kosztytransportu2-"], valuesint["-kosztytransportu3-"],
+                 valuesint["-kosztytransportu4-"]]))
+            matrix_profits = matrix_selling_cost - matrix_cost_buy - matrix_cost_trans
+            print(matrix_profits)
+            matrix_zeros = basic_table.to_numpy()
+            matrix_zeros[:-1, 1:-1] = matrix_profits
+            window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
+        except:
+            sg.popup_error("Podaj liczbe")
+
 
 # Close the window i.e. release resource
 window.close()
