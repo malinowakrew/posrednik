@@ -4,6 +4,9 @@ import PySimpleGUI as sg
 import numpy as np
 import pandas as pd
 
+from alfabeta import  *
+from cycles import  *
+
 # Add your new theme colors and settings
 my_new_theme = {'BACKGROUND': '#709053',
                 'TEXT': '#fff4c9',
@@ -66,40 +69,41 @@ basic_list = basic_table.values.tolist()
 
 # Define the window's contents i.e. layout
 layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
-           sg.In("10", size=(25, 25), enable_events=True, key="-podaz1-"),
-           sg.In("28", size=(25, 25), enable_events=True, key="-podaz2-")],
+           sg.In("10", size=(20, 25), enable_events=True, key="-podaz1-"),
+           sg.In("28", size=(20, 25), enable_events=True, key="-podaz2-")],
 
             [sg.Text('POPYT:', size=(17, 1), key='-text2-', font='Helvetica 16'),
-           sg.In("20", size=(25, 25), enable_events=True, key="-popyt1-"),
-           sg.In("30", size=(25, 25), enable_events=True, key="-popyt2-")],
+           sg.In("20", size=(20, 25), enable_events=True, key="-popyt1-"),
+           sg.In("30", size=(20, 25), enable_events=True, key="-popyt2-")],
 
             [sg.Text('KOSZT ZAKUPU:', size=(17, 1), key='-text3-', font='Helvetica 16'),
-           sg.In("10", size=(25, 25), enable_events=True, key="-kosztzakupu1-"),
-           sg.In("12", size=(25, 25), enable_events=True, key="-kosztzakupu2-")],
+           sg.In("10", size=(20, 25), enable_events=True, key="-kosztzakupu1-"),
+           sg.In("12", size=(20, 25), enable_events=True, key="-kosztzakupu2-")],
 
             [sg.Text('CENA SPRZEDAŻY:', size=(17, 1), key='-text4-', font='Helvetica 16'),
-           sg.In("30", size=(25, 25), enable_events=True, key="-cenasprzedazy1-"),
-           sg.In("25", size=(25, 25), enable_events=True, key="-cenasprzedazy2-")],
+           sg.In("30", size=(20, 25), enable_events=True, key="-cenasprzedazy1-"),
+           sg.In("25", size=(20, 25), enable_events=True, key="-cenasprzedazy2-")],
           [sg.Text('\nKOSZTY TRANSPORTU:', size=(25, 2), key='-text5-', font='Helvetica 16')],
-          [sg.In("8", size=(25, 25), enable_events=True, key="-kosztytransportu1-"),
-           sg.In("14", size=(25, 25), enable_events=True, key="-kosztytransportu2-")],
-          [sg.In("12", size=(25, 25), enable_events=True, key="-kosztytransportu3-"),
-           sg.In("9", size=(25, 25), enable_events=True, key="-kosztytransportu4-")],
+          [sg.In("8", size=(20, 25), enable_events=True, key="-kosztytransportu1-"),
+           sg.In("14", size=(20, 25), enable_events=True, key="-kosztytransportu2-")],
+          [sg.In("12", size=(20, 25), enable_events=True, key="-kosztytransportu3-"),
+           sg.In("9", size=(20, 25), enable_events=True, key="-kosztytransportu4-")],
 
-          [sg.Button('Ok', enable_events=True, key='-Button-', font='Helvetica 16')],
-        [sg.Button('KONWERTER', enable_events=True, key='-Button2-', font='Helvetica 16')],
+          [sg.Button('KONWERTER', enable_events=True, key='-Button2-', font='Helvetica 16')],
+
+          [sg.Text('\nWYNIKI\n', size=(43, 3), key='-te-', font='Helvetica 16', justification="center")],
 
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
                   display_row_numbers=False,
                   hide_vertical_scroll=True,
                   auto_size_columns=False,
-                    num_rows=3, key='-profitmatrix-')],
+                    num_rows=3, key='-profitmatrix-', justification="center")],
 
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
                     display_row_numbers=False,
                     hide_vertical_scroll=True,
                     auto_size_columns=False,
-                    num_rows=3, key='-finalmatrix-')]
+                    num_rows=3, key='-finalmatrix-', justification="center")]
           ]
 
 # Create the window
@@ -132,6 +136,15 @@ while True:
             matrix_zeros = basic_table.to_numpy()
             matrix_zeros[:-1, 1:-1] = matrix_profits
             window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
+
+            matrix_transport = np.array([[11., 0., 0.], [10., 18., 0.], [95., 121., 38.]])
+            matrix_profit = np.array([[20.0, 1.0, 0.0], [-160.0, 14.0, 0.0], [0.0, 0.0, 0.0]])
+            alfa, beta = alfa_beta(matrix_transport, matrix_profit)
+            delt = delta(matrix_transport, matrix_profit, alfa, beta)
+
+            trans = cycle(delt, matrix_transport)
+
+            window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=trans).values.tolist())
         except:
             sg.popup_error("Podaj liczbe")
 
