@@ -33,23 +33,6 @@ def update(popyt, podaz):
     text_elem_4.update(f"POPYT: {popyt}")
     text_elem_3.update(f"PODAŻ: {podaz}")
 
-def suma():
-    number = 100
-
-    suma = 0
-    for i in range(number):
-        suma += i
-
-    text_elem_4 = window['-text5-']
-    text_elem_4.update(f"{suma}")
-
-    while suma > 80:
-        suma -= 4
-
-    text_elem_4 = window['-text5-']
-    text_elem_4.update(f"{suma}")
-
-
 def str_to_float(values):
     return {k: float(v) for k, v in values.items() if k not in ["-profitmatrix-", "-finalmatrix-"]}
 
@@ -137,15 +120,22 @@ while True:
             matrix_zeros[:-1, 1:-1] = matrix_profits
             window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
 
+            #TODO tutaj będzie funkcja Grzesia
             matrix_transport = np.array([[11., 0., 0.], [10., 18., 0.], [95., 121., 38.]])
-            matrix_profit = np.array([[20.0, 1.0, 0.0], [-160.0, 14.0, 0.0], [0.0, 0.0, 0.0]])
+
+            matrix_profit = np.zeros((3, 3))
+            matrix_profit[:-1, :-1] = matrix_profits
             alfa, beta = alfa_beta(matrix_transport, matrix_profit)
             delt = delta(matrix_transport, matrix_profit, alfa, beta)
 
             trans = cycle(delt, matrix_transport)
 
-            window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=trans).values.tolist())
-        except:
+            matrix_zeros = basic_table.to_numpy()
+            matrix_zeros[:, 1:] = trans
+
+            window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
+        except Exception as error:
+            print(error)
             sg.popup_error("Podaj liczbe")
 
 
