@@ -1,8 +1,3 @@
-import PySimpleGUI as sg
-import pandas as pd
-import numpy as np
-
-
 def zeros():
     print("Zmiej niż zero")
 

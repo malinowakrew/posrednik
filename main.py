@@ -1,11 +1,10 @@
-#from ad import *
+# from ad import *
 
 import PySimpleGUI as sg
-import numpy as np
 import pandas as pd
 
-from alfabeta import  *
-from cycles import  *
+from alfabeta import *
+from cycles import *
 
 # Add your new theme colors and settings
 my_new_theme = {'BACKGROUND': '#709053',
@@ -33,8 +32,10 @@ def update(popyt, podaz):
     text_elem_4.update(f"POPYT: {popyt}")
     text_elem_3.update(f"PODAŻ: {podaz}")
 
+
 def str_to_float(values):
     return {k: float(v) for k, v in values.items() if k not in ["-profitmatrix-", "-finalmatrix-"]}
+
 
 def matrixs(tab):
     size1 = 2
@@ -49,21 +50,20 @@ basic_table["D/O"] = ["D1", "D2", "DF"]
 basic_table = basic_table[["D/O", "O1", "O2", "OF"]]
 basic_list = basic_table.values.tolist()
 
-
 # Define the window's contents i.e. layout
 layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
            sg.In("10", size=(20, 25), enable_events=True, key="-podaz1-"),
            sg.In("28", size=(20, 25), enable_events=True, key="-podaz2-")],
 
-            [sg.Text('POPYT:', size=(17, 1), key='-text2-', font='Helvetica 16'),
+          [sg.Text('POPYT:', size=(17, 1), key='-text2-', font='Helvetica 16'),
            sg.In("20", size=(20, 25), enable_events=True, key="-popyt1-"),
            sg.In("30", size=(20, 25), enable_events=True, key="-popyt2-")],
 
-            [sg.Text('KOSZT ZAKUPU:', size=(17, 1), key='-text3-', font='Helvetica 16'),
+          [sg.Text('KOSZT ZAKUPU:', size=(17, 1), key='-text3-', font='Helvetica 16'),
            sg.In("10", size=(20, 25), enable_events=True, key="-kosztzakupu1-"),
            sg.In("12", size=(20, 25), enable_events=True, key="-kosztzakupu2-")],
 
-            [sg.Text('CENA SPRZEDAŻY:', size=(17, 1), key='-text4-', font='Helvetica 16'),
+          [sg.Text('CENA SPRZEDAŻY:', size=(17, 1), key='-text4-', font='Helvetica 16'),
            sg.In("30", size=(20, 25), enable_events=True, key="-cenasprzedazy1-"),
            sg.In("25", size=(20, 25), enable_events=True, key="-cenasprzedazy2-")],
           [sg.Text('\nKOSZTY TRANSPORTU:', size=(25, 2), key='-text5-', font='Helvetica 16')],
@@ -77,9 +77,9 @@ layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
           [sg.Text('\nWYNIKI\n', size=(43, 3), key='-te-', font='Helvetica 16', justification="center")],
 
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
-                  display_row_numbers=False,
-                  hide_vertical_scroll=True,
-                  auto_size_columns=False,
+                    display_row_numbers=False,
+                    hide_vertical_scroll=True,
+                    auto_size_columns=False,
                     num_rows=3, key='-profitmatrix-', justification="center")],
 
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
@@ -92,7 +92,7 @@ layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
 # Create the window
 
 
-window = sg.Window('Zagadnienie pośrednika', layout) #size=(350, 300)
+window = sg.Window('Zagadnienie pośrednika', layout)  # size=(350, 300)
 
 # Event loop
 while True:
@@ -120,7 +120,7 @@ while True:
             matrix_zeros[:-1, 1:-1] = matrix_profits
             window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
 
-            #TODO tutaj będzie funkcja Grzesia
+            # TODO tutaj będzie funkcja Grzesia
             matrix_transport = np.array([[11., 0., 0.], [10., 18., 0.], [95., 121., 38.]])
 
             matrix_profit = np.zeros((3, 3))
@@ -138,7 +138,5 @@ while True:
             print(error)
             sg.popup_error("Podaj liczbe")
 
-
 # Close the window i.e. release resource
 window.close()
-

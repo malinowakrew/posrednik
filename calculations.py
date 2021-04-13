@@ -2,12 +2,10 @@ import copy
 
 import numpy as np
 
-d = [10, 28, 50]
-s = [20, 30, 38]
-p = [[12, 1, 0], [6, 4, 0], [0, 0, 0]]
+from alfabeta import *
 
 
-def calculate(d, s, p):
+def calculate_transport_matrix(d, s, p):
     profit = copy.deepcopy(p)
     demand = copy.deepcopy(d)
     supply = copy.deepcopy(s)
@@ -57,8 +55,21 @@ def calculate_profit(path, profit):
     return full_profit
 
 
-xd = calculate(d, s, p)
-ksd = calculate_profit(xd, p)
-for el in xd:
-    print(el)
-print(ksd)
+def check_delta(delta, transport_matrix):
+    for el_list in delta:
+        for el in el_list:
+            if el > 0:
+                cycle(delta, transport_matrix)
+                check_delta(delta, transport_matrix)
+    return transport_matrix
+
+
+def final_calculation(d, s, p):
+    transport_matrix = calculate_transport_matrix(d, s, p)
+    transport_matrix = np.array(transport_matrix)
+    p = np.array(p)
+    alfa, beta = alfa_beta(transport_matrix, p)
+    delt = delta(transport_matrix, p, alfa, beta)
+    transport_matrix = check_delta(delt, transport_matrix)
+    whole_profit = calculate_profit(transport_matrix, p)
+    return transport_matrix, whole_profit
