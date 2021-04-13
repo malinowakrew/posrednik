@@ -1,3 +1,5 @@
+from itertools import cycle
+
 import numpy as np
 from math import isnan
 
