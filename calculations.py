@@ -13,13 +13,13 @@ def calculate_transport_matrix(d, s, p):
     for list_1d in profit:
         for el in list_1d:
             zyski.append(el)
-    tmp_list = [[0 for j in range(3)] for i in range(3)]
+    transport = [[0 for j in range(3)] for i in range(3)]
     for el in range(5):
         list_of_cordinates = np.where(profit == np.amax(zyski))
         zyski.remove(np.amax(zyski))
         x = int(list_of_cordinates[0][0])
         y = int(list_of_cordinates[1][0])
-        while tmp_list[x][y] is None:
+        while transport[x][y] is None:
             list_of_cordinates = np.where(profit == np.amax(zyski))
             zyski.remove(np.amax(zyski))
             x = int(list_of_cordinates[0][0])
@@ -27,23 +27,23 @@ def calculate_transport_matrix(d, s, p):
             profit[x][y] = None
         if demand[x] <= supply[y]:
             supply[y] -= demand[x]
-            tmp_list[x][y] = demand[x]
+            transport[x][y] = demand[x]
             demand[x] -= demand[x]
-            for index, element in enumerate(tmp_list[x]):
+            for index, element in enumerate(transport[x]):
                 if element == 0:
-                    tmp_list[x][index] = None
+                    transport[x][index] = None
         else:
             demand[x] -= supply[y]
-            tmp_list[x][y] = supply[y]
+            transport[x][y] = supply[y]
             supply[y] -= supply[y]
-            for index, element in enumerate(tmp_list):
+            for index, element in enumerate(transport):
                 if element[y] == 0:
-                    tmp_list[index][y] = None
-    for index_x, x in enumerate(tmp_list):
+                    transport[index][y] = None
+    for index_x, x in enumerate(transport):
         for index_y, y in enumerate(x):
             if y is None:
-                tmp_list[index_x][index_y] = 0
-    return tmp_list
+                transport[index_x][index_y] = 0
+    return transport
 
 
 def calculate_profit(path, profit):
