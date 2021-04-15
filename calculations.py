@@ -55,12 +55,14 @@ def calculate_profit(path, profit):
     return full_profit
 
 
-def check_delta(delta, transport_matrix):
-    for el_list in delta:
+def check_delta(delta1, transport_matrix, p):
+    for el_list in delta1:
         for el in el_list:
             if el > 0:
-                cycle(delta, transport_matrix)
-                check_delta(delta, transport_matrix)
+                alfa, beta = alfa_beta(transport_matrix, p)
+                delta1 = delta(transport_matrix, p, alfa, beta)
+                cycle(delta1, transport_matrix)
+                check_delta(delta1, transport_matrix)
     return transport_matrix
 
 
@@ -70,6 +72,6 @@ def final_calculation(d, s, p):
     p = np.array(p)
     alfa, beta = alfa_beta(transport_matrix, p)
     delt = delta(transport_matrix, p, alfa, beta)
-    transport_matrix = check_delta(delt, transport_matrix)
+    transport_matrix = check_delta(delt, transport_matrix, p)
     whole_profit = calculate_profit(transport_matrix, p)
     return transport_matrix, whole_profit
