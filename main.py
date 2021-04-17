@@ -136,17 +136,18 @@ while True:
             sg.popup_error("Podaj liczbe")
 
 
-        matrix_transport, esteregg = final_calculation(matrix_demand, matrix_supply, matrix_profits)
-
         matrix_profit = np.zeros((3, 3))
         matrix_profit[:-1, :-1] = matrix_profits
-        alfa, beta = alfa_beta(matrix_transport, matrix_profit)
-        delt = delta(matrix_transport, matrix_profit, alfa, beta)
 
-        trans = cycle(delt, matrix_transport)
+        matrix_transport, esteregg = final_calculation(matrix_demand, matrix_supply, matrix_profit)
+
+        # alfa, beta = alfa_beta(matrix_transport, matrix_profit)
+        # delt = delta(matrix_transport, matrix_profit, alfa, beta)
+        #
+        # trans = cycle(delt, matrix_transport)
 
         matrix_zeros = basic_table.to_numpy()
-        matrix_zeros[:, 1:] = trans
+        matrix_zeros[:, 1:] = matrix_transport
 
         window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
 
