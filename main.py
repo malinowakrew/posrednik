@@ -139,7 +139,7 @@ while True:
         matrix_profit = np.zeros((3, 3))
         matrix_profit[:-1, :-1] = matrix_profits
 
-        matrix_transport, esteregg = final_calculation(matrix_demand, matrix_supply, matrix_profit)
+        matrix_transport, esteregg = final_calculation(matrix_supply, matrix_demand,matrix_profit)
 
         # alfa, beta = alfa_beta(matrix_transport, matrix_profit)
         # delt = delta(matrix_transport, matrix_profit, alfa, beta)

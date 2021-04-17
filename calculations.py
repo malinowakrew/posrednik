@@ -1,7 +1,5 @@
 import copy
 
-import numpy as np
-
 from alfabeta import *
 
 
@@ -76,7 +74,7 @@ def final_calculation(d, s, p):
     transport_matrix = np.array(transport_matrix)
     p = np.array(p)
     alfa, beta = alfa_beta(transport_matrix, p)
-    delt = delta(transport_matrix, p, alfa, beta)
+    delt = delta(transport_matrix, p, beta, alfa)
     transport_matrix = check_delta(delt, transport_matrix, p)
     whole_profit = calculate_profit(transport_matrix, p)
     return transport_matrix, whole_profit
