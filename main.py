@@ -5,6 +5,7 @@ import pandas as pd
 
 from alfabeta import *
 from cycles import *
+from calculations import *
 
 # Add your new theme colors and settings
 my_new_theme = {'BACKGROUND': '#709053',
@@ -120,23 +121,37 @@ while True:
             matrix_zeros[:-1, 1:-1] = matrix_profits
             window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
 
+            print("ok")
             # TODO tutaj będzie funkcja Grzesia
-            matrix_transport = np.array([[11., 0., 0.], [10., 18., 0.], [95., 121., 38.]])
+            matrix_demand = [valuesint["-popyt1-"], valuesint["-popyt2-"], sum([valuesint["-podaz1-"], valuesint["-podaz2-"]])]
 
-            matrix_profit = np.zeros((3, 3))
-            matrix_profit[:-1, :-1] = matrix_profits
-            alfa, beta = alfa_beta(matrix_transport, matrix_profit)
-            delt = delta(matrix_transport, matrix_profit, alfa, beta)
+            matrix_supply = [valuesint["-podaz1-"], valuesint["-podaz2-"], sum([valuesint["-popyt1-"], valuesint["-popyt2-"]])]
 
-            trans = cycle(delt, matrix_transport)
+            print(matrix_demand)
+            print(matrix_supply)
 
-            matrix_zeros = basic_table.to_numpy()
-            matrix_zeros[:, 1:] = trans
-
-            window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
+            # matrix_transport = np.array([[11., 0., 0.], [10., 18., 0.], [95., 121., 38.]])
         except Exception as error:
             print(error)
             sg.popup_error("Podaj liczbe")
+
+
+        matrix_transport, esteregg = final_calculation(matrix_demand, matrix_supply, matrix_profits)
+
+        matrix_profit = np.zeros((3, 3))
+        matrix_profit[:-1, :-1] = matrix_profits
+        alfa, beta = alfa_beta(matrix_transport, matrix_profit)
+        delt = delta(matrix_transport, matrix_profit, alfa, beta)
+
+        trans = cycle(delt, matrix_transport)
+
+        matrix_zeros = basic_table.to_numpy()
+        matrix_zeros[:, 1:] = trans
+
+        window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
+
+
+
 
 # Close the window i.e. release resource
 window.close()

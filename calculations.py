@@ -9,6 +9,11 @@ def calculate_transport_matrix(d, s, p):
     profit = copy.deepcopy(p)
     demand = copy.deepcopy(d)
     supply = copy.deepcopy(s)
+
+    print(profit)
+    print(demand)
+    print(supply)
+
     zyski = []
     for list_1d in profit:
         for el in list_1d:
