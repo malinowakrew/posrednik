@@ -73,9 +73,10 @@ layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
           [sg.In("12", size=(20, 25), enable_events=True, key="-kosztytransportu3-"),
            sg.In("9", size=(20, 25), enable_events=True, key="-kosztytransportu4-")],
 
-          [sg.Button('KONWERTER', enable_events=True, key='-Button2-', font='Helvetica 16')],
+          [sg.Button('OBLICZ', enable_events=True, key='-Button2-', font='Helvetica 16')],
 
-          [sg.Text('\nWYNIKI\n', size=(43, 3), key='-te-', font='Helvetica 16', justification="center")],
+          [sg.Text('\nWYNIKI\n', size=(43, 2), key='-te-', font='Helvetica 16', justification="center")],
+            [sg.Text('ZYSKI:', size=(25, 1), key='-text5-', font='Helvetica 16')],
 
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
                     display_row_numbers=False,
@@ -83,12 +84,20 @@ layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
                     auto_size_columns=False,
                     num_rows=3, key='-profitmatrix-', justification="center")],
 
+          [sg.Text('\nOPTYMALNY PRZEJAZD:', size=(25, 2), key='-text5-', font='Helvetica 16')],
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
                     display_row_numbers=False,
                     hide_vertical_scroll=True,
                     auto_size_columns=False,
-                    num_rows=3, key='-finalmatrix-', justification="center")]
+                    num_rows=3, key='-finalmatrix-', justification="center")],
+          [sg.Text('KOSZTY:', size=(17, 1), key='-text10-', font='Helvetica 16'),
+            sg.Text('', size=(17, 1), key='-KOSZTY-', font='Helvetica 16')],
+          [sg.Text('ZYSKI:', size=(17, 1), key='-text11-', font='Helvetica 16'),
+            sg.Text('', size=(17, 1), key='-ZYSKI-', font='Helvetica 16')],
+          [sg.Text('ZYSKI KOŃCOWE:', size=(17, 1), key='-text12-', font='Helvetica 16'),
+            sg.Text('', size=(17, 1), key='-KONCOWEZYSKI-', font='Helvetica 16')],
           ]
+
 
 # Create the window
 
@@ -105,6 +114,7 @@ while True:
     if event == "-Button2-":
         print(values)
         try:
+
             valuesint = str_to_float(values)
             matrix_selling_cost = (matrixs(
                 [valuesint["-cenasprzedazy1-"], valuesint["-cenasprzedazy2-"], valuesint["-cenasprzedazy1-"],
@@ -116,41 +126,39 @@ while True:
                 [valuesint["-kosztytransportu1-"], valuesint["-kosztytransportu2-"], valuesint["-kosztytransportu3-"],
                  valuesint["-kosztytransportu4-"]]))
             matrix_profits = matrix_selling_cost - matrix_cost_buy - matrix_cost_trans
-            print(matrix_profits)
             matrix_zeros = basic_table.to_numpy()
             matrix_zeros[:-1, 1:-1] = matrix_profits
             window.Element("-profitmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
 
-            print("ok")
-            # TODO tutaj będzie funkcja Grzesia
             matrix_demand = [valuesint["-popyt1-"], valuesint["-popyt2-"], sum([valuesint["-podaz1-"], valuesint["-podaz2-"]])]
 
             matrix_supply = [valuesint["-podaz1-"], valuesint["-podaz2-"], sum([valuesint["-popyt1-"], valuesint["-popyt2-"]])]
 
-            print(matrix_demand)
-            print(matrix_supply)
-
-            # matrix_transport = np.array([[11., 0., 0.], [10., 18., 0.], [95., 121., 38.]])
         except Exception as error:
             print(error)
             sg.popup_error("Podaj liczbe")
 
-
         matrix_profit = np.zeros((3, 3))
         matrix_profit[:-1, :-1] = matrix_profits
 
-        matrix_transport, esteregg = final_calculation(matrix_supply, matrix_demand,matrix_profit)
+        matrix_selling_costs = np.zeros((3, 3))
+        matrix_selling_costs[:-1, :-1] = matrix_selling_cost
 
-        # alfa, beta = alfa_beta(matrix_transport, matrix_profit)
-        # delt = delta(matrix_transport, matrix_profit, alfa, beta)
-        #
-        # trans = cycle(delt, matrix_transport)
+        matrix_cost_buys = np.zeros((3, 3))
+        matrix_cost_buys[:-1, :-1] = matrix_cost_buy
+
+        matrix_cost_transport = np.zeros((3, 3))
+        matrix_cost_transport[:-1, :-1] = matrix_cost_trans
+
+        matrix_transport, ending_profit, whole_profit, whole_cost = final_calculation(matrix_supply, matrix_demand, matrix_profit, matrix_selling_costs, matrix_cost_buys, matrix_cost_transport)
 
         matrix_zeros = basic_table.to_numpy()
         matrix_zeros[:, 1:] = matrix_transport
 
         window.Element("-finalmatrix-").Update(values=pd.DataFrame(data=matrix_zeros).values.tolist())
-
+        window.Element("-KOSZTY-").Update(whole_cost)
+        window.Element("-ZYSKI-").Update(whole_profit)
+        window.Element("-KONCOWEZYSKI-").Update(ending_profit)
 
 
 

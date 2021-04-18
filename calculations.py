@@ -8,9 +8,6 @@ def calculate_transport_matrix(d, s, p):
     demand = copy.deepcopy(d)
     supply = copy.deepcopy(s)
 
-    print(profit)
-    print(demand)
-    print(supply)
 
     zyski = []
     for list_1d in profit:
@@ -69,12 +66,15 @@ def check_delta(delta1, transport_matrix, p):
     return transport_matrix
 
 
-def final_calculation(d, s, p):
+def final_calculation(d, s, p, matrix_selling_cost, matrix_cost_buy, matrix_cost_trans):
     transport_matrix = calculate_transport_matrix(d, s, p)
     transport_matrix = np.array(transport_matrix)
     p = np.array(p)
     alfa, beta = alfa_beta(transport_matrix, p)
     delt = delta(transport_matrix, p, beta, alfa)
     transport_matrix = check_delta(delt, transport_matrix, p)
-    whole_profit = calculate_profit(transport_matrix, p)
-    return transport_matrix, whole_profit
+    whole_profit = calculate_profit(transport_matrix, matrix_selling_cost)
+    whole_cost = calculate_profit(transport_matrix, (matrix_cost_trans+matrix_cost_buy))
+    ending_profit = calculate_profit(transport_matrix, p)
+
+    return transport_matrix, ending_profit, whole_profit, whole_cost
