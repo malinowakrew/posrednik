@@ -75,7 +75,7 @@ layout = [[sg.Text('PODAŻ:', size=(17, 1), key='-text1-', font='Helvetica 16'),
 
           [sg.Button('OBLICZ', enable_events=True, key='-Button2-', font='Helvetica 16')],
 
-          [sg.Text('\nWYNIKI\n', size=(43, 2), key='-te-', font='Helvetica 16', justification="center")],
+          [sg.Text('WYNIKI\n', size=(43, 2), key='-te-', font='Helvetica 16', justification="center")],
             [sg.Text('ZYSKI:', size=(25, 1), key='-text5-', font='Helvetica 16')],
 
           [sg.Table(values=basic_list, headings=list(basic_table.columns), font='Helvetica',
